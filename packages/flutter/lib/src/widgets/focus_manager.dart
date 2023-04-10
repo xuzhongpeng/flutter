@@ -1710,16 +1710,16 @@ class _HighlightModeManager {
   HashedObserverList<ValueChanged<FocusHighlightMode>> _listeners = HashedObserverList<ValueChanged<FocusHighlightMode>>();
 
   void registerGlobalHandlers() {
-    assert(ServicesBinding.instance.keyEventManager.keyMessageHandler == null);
-    ServicesBinding.instance.keyEventManager.keyMessageHandler = handleKeyMessage;
+    // assert(ServicesBinding.instance.keyEventManager.keyMessageHandler == null);
+    ServicesBinding.instance.keyEventManager.keyMessageHandlers.add(handleKeyMessage);
     GestureBinding.instance.pointerRouter.addGlobalRoute(handlePointerEvent);
   }
 
   @mustCallSuper
   void dispose() {
-    if (ServicesBinding.instance.keyEventManager.keyMessageHandler == handleKeyMessage) {
+    if (ServicesBinding.instance.keyEventManager.keyMessageHandlers.contains(handleKeyMessage)) {
       GestureBinding.instance.pointerRouter.removeGlobalRoute(handlePointerEvent);
-      ServicesBinding.instance.keyEventManager.keyMessageHandler = null;
+      ServicesBinding.instance.keyEventManager.keyMessageHandlers.remove(handleKeyMessage);
     }
     _listeners = HashedObserverList<ValueChanged<FocusHighlightMode>>();
   }

@@ -648,8 +648,8 @@ class RawKeyboard {
   /// common situation), then the exact value of [keyEventHandler] is a dummy
   /// callback and must not be invoked.
   RawKeyEventHandler? get keyEventHandler {
-    if (ServicesBinding.instance.keyEventManager.keyMessageHandler != _cachedKeyMessageHandler) {
-      _cachedKeyMessageHandler = ServicesBinding.instance.keyEventManager.keyMessageHandler;
+    if (!ServicesBinding.instance.keyEventManager.keyMessageHandlers.contains(_cachedKeyMessageHandler)) {
+      _cachedKeyMessageHandler = ServicesBinding.instance.keyEventManager.keyMessageHandlers.first;
       _cachedKeyEventHandler = _cachedKeyMessageHandler == null ?
         null :
         (RawKeyEvent event) {
@@ -666,15 +666,18 @@ class RawKeyboard {
   KeyMessageHandler? _cachedKeyMessageHandler;
   set keyEventHandler(RawKeyEventHandler? handler) {
     _cachedKeyEventHandler = handler;
-    _cachedKeyMessageHandler = handler == null ?
-      null :
-      (KeyMessage message) {
-        if (message.rawEvent != null) {
-          return handler(message.rawEvent!);
-        }
-        return false;
-      };
-    ServicesBinding.instance.keyEventManager.keyMessageHandler = _cachedKeyMessageHandler;
+    _cachedKeyMessageHandler = handler == null
+        ? null
+        : (KeyMessage message) {
+            if (message.rawEvent != null) {
+              return handler(message.rawEvent!);
+            }
+            return false;
+          };
+    if (_cachedKeyMessageHandler != null) {
+      ServicesBinding.instance.keyEventManager.keyMessageHandlers
+          .add(_cachedKeyMessageHandler!);
+    }
   }
 
   /// Process a new [RawKeyEvent] by recording the state changes and

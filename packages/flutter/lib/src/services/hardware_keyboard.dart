@@ -823,7 +823,7 @@ class KeyEventManager {
   ///
   ///  * [HardwareKeyboard.addHandler], which accepts multiple global handlers
   ///    to process [KeyEvent]s
-  KeyMessageHandler? keyMessageHandler;
+  List<KeyMessageHandler> keyMessageHandlers = [];
 
   final HardwareKeyboard _hardwareKeyboard;
   final RawKeyboard _rawKeyboard;
@@ -893,10 +893,14 @@ class KeyEventManager {
   }
 
   bool _dispatchKeyMessage(List<KeyEvent> keyEvents, RawKeyEvent? rawEvent) {
-    if (keyMessageHandler != null) {
+    if (keyMessageHandlers != null) {
       final KeyMessage message = KeyMessage(keyEvents, rawEvent);
       try {
-        return keyMessageHandler!(message);
+        bool result = false;
+        for(KeyMessageHandler keyMessageHandler in keyMessageHandlers){
+          result = keyMessageHandler(message);
+        }
+        return result;
       } catch (exception, stack) {
         InformationCollector? collector;
         assert(() {

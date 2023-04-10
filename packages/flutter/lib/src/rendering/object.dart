@@ -16,6 +16,7 @@ import 'package:flutter/semantics.dart';
 import 'debug.dart';
 import 'layer.dart';
 import 'proxy_box.dart';
+import 'view.dart';
 
 export 'package:flutter/foundation.dart' show
   DiagnosticPropertiesBuilder,
@@ -1165,6 +1166,13 @@ class PipelineOwner {
       if (!kReleaseMode) {
         Timeline.finishSync();
       }
+    }
+  }
+
+  void compositeFrame() {
+    (rootNode as RenderView).compositeFrame();
+    for (final PipelineOwner child in _children) {
+      child.compositeFrame();
     }
   }
 
