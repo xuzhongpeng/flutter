@@ -170,14 +170,14 @@ class TestPlatformDispatcher implements PlatformDispatcher {
   final Map<Object, TestFlutterView> _testViews = <Object, TestFlutterView>{};
 
   @override
-  VoidCallback? get onMetricsChanged => _platformDispatcher.onMetricsChanged;
-  VoidCallback? _onMetricsChanged;
+  ViewIdCallback? get onMetricsChanged => _platformDispatcher.onMetricsChanged;
+  ViewIdCallback? _onMetricsChanged;
   @override
-  set onMetricsChanged(VoidCallback? callback) {
+  set onMetricsChanged(ViewIdCallback? callback) {
     _onMetricsChanged = callback;
   }
 
-  void _handleMetricsChanged() {
+  void _handleMetricsChanged(Object viewId) {
     _updateViews();
     _onMetricsChanged?.call();
   }

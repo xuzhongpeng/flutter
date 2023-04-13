@@ -565,8 +565,8 @@ mixin WidgetsBinding on BindingBase, ServicesBinding, SchedulerBinding, GestureB
   }
 
   @override
-  void handleMetricsChanged() {
-    super.handleMetricsChanged();
+  void handleMetricsChanged(Object viewId) {
+    super.handleMetricsChanged(viewId);
     for (final WidgetsBindingObserver observer in _observers) {
       observer.didChangeMetrics();
     }
