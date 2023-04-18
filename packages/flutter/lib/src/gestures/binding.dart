@@ -401,7 +401,9 @@ mixin GestureBinding on BindingBase implements HitTestable, HitTestDispatcher, H
     }
   }
   @override // from HitTestable
-  void hitTestByViewId(int viewId, HitTestResult result, Offset position) { }
+  void hitTestByViewId(int viewId, HitTestResult result, Offset position) {
+    hitTest(result, position);
+  }
 
   /// Determine which [HitTestTarget] objects are located at a given position.
   @override // from HitTestable
